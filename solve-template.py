@@ -1,5 +1,5 @@
 #
-# Advent of Code 2021
+# Advent of Code 2022
 # Bryan Clair
 #
 # Day --
@@ -13,8 +13,10 @@ args = aocutils.parse_args()
 
 inputlines = [x.strip() for x in open(args.file).readlines()]
 
-parser = re.compile(r"name: (\w+) val: (\d+)") # or whatever
+parser = re.compile(r"name:\s*(\w+)\s*val:\s*(\d+)") # or whatever
 
 for line in inputlines:
-    print line
+    print(line)
     name, val = parser.match(line).groups()
+    print(name,val)
+    
