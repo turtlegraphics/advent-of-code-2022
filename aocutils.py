@@ -6,6 +6,7 @@
 #
 from argparse import ArgumentParser
 from math import sqrt
+from functools import reduce
 
 def parse_args():
     parser = ArgumentParser()
@@ -44,7 +45,7 @@ def chinese_remainder(n, a):
     prod = reduce(lambda a, b: a*b, n)
 
     for n_i, a_i in zip(n, a):
-        p = prod / n_i
+        p = prod // n_i
         sum += a_i * mul_inv(p, n_i) * p
     return sum % prod
 
@@ -54,7 +55,7 @@ def mul_inv(a, b):
     x0, x1 = 0, 1
     if b == 1: return 1
     while a > 1:
-        q = a / b
+        q = a // b
         a, b = b, a%b
         x0, x1 = x1 - q * x0, x0
     if x1 < 0: x1 += b0
@@ -371,51 +372,53 @@ class HexPoint(Point):
 
 if __name__ == '__main__':
     # Argument parsing
+    print('Result of argument parsing')
     print(parse_args())
-
+    print()
+    
     # Number Theory
-    print '-'*20
-    print "Number Theory"
-    print '-'*20
-    print 'The multiplicative inverse of 5 mod 13 is',mul_inv(5,13)
-    print 'Solve x = 4 mod 16 and x = 2 mod 21:',
-    print chinese_remainder([16,21],[4,2])
+    print('-'*20)
+    print("Number Theory")
+    print('-'*20)
+    print('The multiplicative inverse of 5 mod 13 is',mul_inv(5,13))
+    print('Solve x = 4 mod 16 and x = 2 mod 21:',)
+    print(chinese_remainder([16,21],[4,2]))
 
     # Point
-    print '-'*20
-    print "Point class"
-    print '-'*20
+    print('-'*20)
+    print("Point class")
+    print('-'*20)
     p = Point(1,2)
     q = Point((3,3)) # ok to use tuple
     r = Point(p)
     r += Point(10,10)
     r -= Point(5,1)
 
-    print 'p=%s,q=%s,r=%s' % (str(p),str(q),str(r))
-    print 'q and q are',p.dist(q),'apart'
-    print 'p + q = ',p+q
-    print 'r - q = ',r-q
+    print('p=%s,q=%s,r=%s' % (str(p),str(q),str(r)))
+    print('p and q are',p.dist(q),'apart')
+    print('p + q = ',p+q)
+    print('r - q = ',r-q)
     assert(r - q == Point(3,8))
     assert(p != q)
 
     # Point 3d
-    print '-'*20
-    print "Point3d class"
-    print '-'*20
+    print('-'*20)
+    print("Point3d class")
+    print('-'*20)
     p = Point3d(1,2,3)
     q = Point3d(-1,5,2)
     r = Point3d(0,0,0)
-    print 'p=%s,q=%s,r=%s' % (str(p),str(q),str(r))
-    print 'q and q are',p.dist(q),'apart'
-    print 'p + q = ',p+q
-    print 'r - q = ',r-q
+    print('p=%s,q=%s,r=%s' % (str(p),str(q),str(r)))
+    print('p and q are',p.dist(q),'apart')
+    print('p + q = ',p+q)
+    print('r - q = ',r-q)
     assert(r - q == Point3d(1,-5,-2))
     assert(p != q)
     
     # Grid
-    print '-'*20
-    print "Grid class"
-    print '-'*20
+    print('-'*20)
+    print("Grid class")
+    print('-'*20)
     g = Grid()
     g[Point(-1,0)] = 'o'
     g[Point(1,0)] = 'o'
@@ -431,7 +434,7 @@ if __name__ == '__main__':
     for p in g:
         if g[p] == '*':
             dotcount += 1
-    print 'There are %d stars.' % dotcount
+    print('There are %d stars.' % dotcount)
     assert(dotcount == len(dots))
 
     assert(g[nose] == 'U')
@@ -439,13 +442,13 @@ if __name__ == '__main__':
     assert((2,0) in g)
 
     nosenbrs = tuple([len(g.neighbors(nose,diag)) for diag in [False,True]])
-    print 'nose U has %d cardinal and %d diagonal neighbors.' % nosenbrs
+    print('nose U has %d cardinal and %d diagonal neighbors.' % nosenbrs)
     assert((1,5) == nosenbrs)
 
-    print 'here it is upside down and shaded in with .s'
+    print('here it is upside down and shaded in with .s')
     g.display(blank='.', vflip=True)
 
-    print 'now lets print a little xmas art'
+    print('now lets print a little xmas art')
     sleighart = """\
 __     _  __ 
 | \__ `\O/  `--  {}    \}    {/
@@ -456,13 +459,13 @@ __     _  __
     sleigh = Grid()
     sleigh.scan(sleighart)
     sleigh.display()
-    print sleigh.bounds()
+    print(sleigh.bounds())
 
     # HexGrid, HexPoint
-    print '-'*20
-    print "HexGrid, HexPoint"
-    print '-'*20
-    print 'Distances from origin:'
+    print('-'*20)
+    print("HexGrid, HexPoint")
+    print('-'*20)
+    print('Distances from origin:')
     h = HexGrid()
     for x in range(-3,4):
         for y in range(-3,4):
@@ -476,8 +479,8 @@ __     _  __
         for y in range(-2,6):
             h[(x,y)] = '.'
 
-    print
-    print 'Take a stroll'
+    print()
+    print('Take a stroll')
     p = HexPoint()
     q = HexPoint()
     q.move('sw')
@@ -488,16 +491,16 @@ __     _  __
     i = 0
     h[p] = '0'
     for d in ['e','ne','ne','nw','w','w','w','sw','se']:
-        print '%s --%s-->' % (str(p),d),
+        print('%s --%s-->' % (str(p),d),)
         p.move(d)
         i += 1
         h[p] = str(i)
-    print p
+    print(p)
 
     h.display()
 
-    print 'Ended',abs(p),'from start'
-    print 'Ended',p.dist(q),'from q'
+    print('Ended',abs(p),'from start')
+    print('Ended',p.dist(q),'from q')
 
     assert(p.dist(q) == 3)
     assert(len(h.neighbors(p)) == 6)
