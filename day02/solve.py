@@ -13,20 +13,9 @@ args = aocutils.parse_args()
 
 inputlines = [x.strip() for x in open(args.file).readlines()]
 
-oppTable = {
-    'A' : 0,
-    'B' : 1,
-    'C' : 2
-    }
-meTable = {
-    'X' : 0,
-    'Y' : 1,
-    'Z' : 2
-    }
-
 def score(opp, me):
     win = 0
-    if me == opp+1 or (me == 0 and opp == 2):
+    if me == (opp+1) % 3:
         win = 6
     elif me == opp:
         win = 3
@@ -35,8 +24,8 @@ def score(opp, me):
 tot = 0
 for line in inputlines:
     opp, me = line.split()
-    opp = oppTable[opp]
-    me = meTable[me]
+    opp = ord(opp) - ord('A')
+    me = ord(me) - ord('X')
     tot += score(opp,me)
 
 print(tot)
@@ -44,7 +33,7 @@ print(tot)
 tot = 0
 for line in inputlines:
     opp, me = line.split()
-    opp = oppTable[opp]
+    opp = ord(opp) - ord('A')
     if me == 'X':
         play = (opp - 1) % 3
     elif me == 'Y':
