@@ -15,6 +15,7 @@ inputlines = [x.strip() for x in open(args.file).readlines()]
 # import re
 # parser = re.compile(r"name:\s*(\w+)\s*val:\s*(\d+)") # or whatever
 # name, val = parser.match(line).groups()
+# val = int(val)
 
 for line in inputlines:
     print(line)
