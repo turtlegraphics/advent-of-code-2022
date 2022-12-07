@@ -39,7 +39,7 @@ def totsize(cwd = '',depth=0):
         else:
             # print('  '*(depth+1),name,size)
             mysize += size
-    print('  '*depth,cwd,'has size',mysize)
+    # print('  '*depth,cwd,'has size',mysize)
     if mysize < 100000:
         part1sum += mysize
     return mysize
@@ -56,7 +56,7 @@ def findkill(cwd = '',depth=0):
         else:
             # print('  '*(depth+1),name,size)
             mysize += size
-    print('  '*depth,cwd,'has size',mysize)
+    # print('  '*depth,cwd,'has size',mysize)
     if mysize >= needed and mysize < bestdir:
         bestdir = mysize
     return mysize
@@ -79,12 +79,12 @@ for line in inputlines:
             size = int(size)
         system[cwd].append( (size, name) )
 
-dump()
+# dump()
 used = totsize()
 print('part1:',part1sum)
 
 freespace = 70000000 - used
 needed    = 30000000 - freespace
-print('need to delete at least',needed)
+# print('need to delete at least',needed)
 findkill()
 print('part2:',bestdir)
