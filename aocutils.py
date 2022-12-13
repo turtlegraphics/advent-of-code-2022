@@ -129,6 +129,9 @@ class Point3d:
         self.z -= other.z
         return self
 
+    def __hash__(self):
+        return hash((self.x,self.y,self.z))
+    
     def __str__(self):
         return '(%s,%s,%s)' % (str(self.x),str(self.y),str(self.z))
 
@@ -189,6 +192,9 @@ class Point:
         self.y -= other.y
         return self
 
+    def __hash__(self):
+        return hash((self.x,self.y))
+    
     def __str__(self):
         return '(%s,%s)' % (str(self.x),str(self.y))
 
@@ -200,7 +206,7 @@ class Grid:
     contains all data.
     """
     def __init__(self):
-        self.raster = {}
+        self.raster = {}        
 
     def __setitem__(self,p,tile):
         x,y = p
@@ -285,7 +291,48 @@ class Grid:
                 y -= 1
             else:
                 y += 1
+
+    def dijkstra(self, source, target = None,
+                 distance_function = lambda u,v : 1):
+        sx,sy = source
+        assert((sx,sy) in self)
         
+        dist = {}
+        prev = {}
+        Q = set()
+
+        for v in self:
+            dist[v] = float("inf")
+            prev[v] = None
+            Q.add(v)
+
+        dist[(sx,sy)] = 0
+        
+        while Q:
+            # find min distance point u
+            min_dist = float("inf")
+            for p in Q:
+                if dist[p] < min_dist:
+                    min_dist = dist[p]
+                    u = p
+
+            if u == target:
+                return (dist, prev)
+            
+            Q.remove(u)
+
+            # update u's neighbors
+            nbrs = self.neighbors(u)
+            for v in nbrs:
+                v = (v.x,v.y)
+                if v in Q:
+                    alt = dist[u] + distance_function(u,v) 
+                    if alt < dist[v]:
+                        dist[v] = alt
+                        prev[v] = u
+
+        return (dist, prev)
+
     def display(self, blank=' ', vflip = False, sep=''):
         """
         Display the grid.
@@ -461,6 +508,53 @@ __     _  __
     sleigh.display()
     print(sleigh.bounds())
 
+    print()
+    print('solve a maze')
+    mazeart = """\
+.--.--.--.--.--.--.
+|     |        |  |
+:  :--:  :  :  :  :
+|  |     |  |     |
+:  :  :  :--:--:--:
+|  |  |           |
+:  :  :--:--:--:  :
+|  |        |E |  |
+:  :--:--:  :  :  :
+|     |     |  |  |
+:--:  :  :--:  :  :
+|S       |        |
+:--:--:--:--:--:--:
+""".split('\n')
+    maze = Grid()
+    maze.scan(mazeart)
+    for p in maze:
+        if maze[p] == 'S':
+            maze_start = p
+        if maze[p] == 'E':
+            maze_end = p
+    maze.display()
+    maze[maze_start] = ' '
+    maze[maze_end] = ' '
+    
+    def nowall(u,v):
+        if maze[u] == ' ' and maze[v] == ' ':
+            return 1
+        else:
+            return 10000
+
+    dist, prev = maze.dijkstra(source = maze_start, target = maze_end,
+                               distance_function = nowall)
+
+    print('distance to finish:',dist[maze_end])
+    solution = Grid()
+    for p in maze:
+        solution[p] = maze[p]
+    p = maze_end
+    while p:
+        solution[p] = str(dist[p])[-1]
+        p = prev[p]
+    solution.display()
+    
     # HexGrid, HexPoint
     print('-'*20)
     print("HexGrid, HexPoint")
