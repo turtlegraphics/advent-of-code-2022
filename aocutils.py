@@ -166,6 +166,11 @@ class Point:
         """Euclidean distance."""
         return abs(self - other)
 
+    def unit(self):
+        """Make return a unit vector, same direction."""
+        a = abs(self)
+        return Point(self.x/a,self.y/a)
+
     def __eq__(self,other):
         return (self.x == other.x) and (self.y == other.y)
 
