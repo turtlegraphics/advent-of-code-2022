@@ -147,7 +147,7 @@ class Point:
         if isinstance(x,Point):
             self.x = x.x
             self.y = x.y
-        elif isinstance(x,tuple):
+        elif isinstance(x,tuple) or isinstance(x,list):
             self.x, self.y = x
         else:
             self.x, self.y = x,y
