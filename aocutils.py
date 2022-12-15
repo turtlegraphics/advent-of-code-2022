@@ -166,6 +166,10 @@ class Point:
         """Euclidean distance."""
         return abs(self - other)
 
+    def mandist(self,other):
+        """Manhattan distance"""
+        return abs(self.x - other.x) + abs(self.y - other.y)
+    
     def unit(self):
         """Make return a unit vector, same direction."""
         a = abs(self)
