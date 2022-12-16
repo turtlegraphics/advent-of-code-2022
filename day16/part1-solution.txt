@@ -1,0 +1,46 @@
+AA
+AA moving to QC
+ QC
+ QC moving to ML
+  ML
+  ML moving to LU
+  ML found 1615 ['LU', 'open', 'TF', 'MM', 'GJ', 'open', 'AO', 'KI', 'OQ', 'open', 'IV', 'LG', 'QE', 'open', 'HE', 'SV', 'QJ', 'open', 'YA', 'OS', 'open', 'QA', 'SQ', 'open']
+ QC found 1615 ['ML', 'LU', 'open', 'TF', 'MM', 'GJ', 'open', 'AO', 'KI', 'OQ', 'open', 'IV', 'LG', 'QE', 'open', 'HE', 'SV', 'QJ', 'open', 'YA', 'OS', 'open', 'QA', 'SQ', 'open']
+AA moving to ZR
+ ZR
+ ZR moving to VL
+  VL
+  VL moving to KU
+  VL found 1431 ['KU', 'open', 'MI', 'FF', 'EU', 'OS', 'open', 'YA', 'QJ', 'open', 'SV', 'HE', 'QE', 'open', 'LG', 'IV', 'OQ', 'open', 'KI', 'AO', 'GJ', 'open', 'UD', 'DV', 'open']
+ ZR found 1431 ['VL', 'KU', 'open', 'MI', 'FF', 'EU', 'OS', 'open', 'YA', 'QJ', 'open', 'SV', 'HE', 'QE', 'open', 'LG', 'IV', 'OQ', 'open', 'KI', 'AO', 'GJ', 'open', 'UD', 'DV', 'open']
+AA moving to NT
+ NT
+ NT moving to FF
+  FF
+  FF opening
+  FF moving to EU
+  FF moving to SG
+  FF moving to MI
+  FF moving to EH
+  FF found 1728 ['EU', 'OS', 'open', 'YA', 'QJ', 'open', 'SV', 'HE', 'QE', 'open', 'LG', 'IV', 'OQ', 'open', 'KI', 'AO', 'GJ', 'open', 'UD', 'DV', 'open', 'JH', 'HU', 'KU', 'open']
+ NT found 1728 ['FF', 'EU', 'OS', 'open', 'YA', 'QJ', 'open', 'SV', 'HE', 'QE', 'open', 'LG', 'IV', 'OQ', 'open', 'KI', 'AO', 'GJ', 'open', 'UD', 'DV', 'open', 'JH', 'HU', 'KU', 'open']
+AA moving to JG
+ JG
+ JG moving to VT
+  VT
+  VT moving to HY
+  VT found 1567 ['HY', 'open', 'WK', 'EL', 'SQ', 'open', 'QA', 'OS', 'open', 'YA', 'QJ', 'open', 'SV', 'HE', 'QE', 'open', 'LG', 'IV', 'OQ', 'open', 'KI', 'AO', 'GJ', 'open', 'UD', 'DV', 'open']
+ JG found 1567 ['VT', 'HY', 'open', 'WK', 'EL', 'SQ', 'open', 'QA', 'OS', 'open', 'YA', 'QJ', 'open', 'SV', 'HE', 'QE', 'open', 'LG', 'IV', 'OQ', 'open', 'KI', 'AO', 'GJ', 'open', 'UD', 'DV', 'open']
+AA moving to FO
+ FO
+ FO moving to SB
+  SB
+  SB opening
+  SB moving to SG
+  SB moving to NV
+  SB moving to GP
+  SB moving to ET
+  SB found 1607 ['GP', 'UV', 'GJ', 'open', 'AO', 'KI', 'OQ', 'open', 'IV', 'LG', 'QE', 'open', 'HE', 'SV', 'QJ', 'open', 'YA', 'OS', 'open', 'QA', 'SQ', 'open', 'EL', 'WK', 'HY', 'open']
+ FO found 1607 ['SB', 'GP', 'UV', 'GJ', 'open', 'AO', 'KI', 'OQ', 'open', 'IV', 'LG', 'QE', 'open', 'HE', 'SV', 'QJ', 'open', 'YA', 'OS', 'open', 'QA', 'SQ', 'open', 'EL', 'WK', 'HY', 'open']
+AA found 1728 ['NT', 'FF', 'EU', 'OS', 'open', 'YA', 'QJ', 'open', 'SV', 'HE', 'QE', 'open', 'LG', 'IV', 'OQ', 'open', 'KI', 'AO', 'GJ', 'open', 'UD', 'DV', 'open', 'JH', 'HU', 'KU', 'open']
+(1728, ['NT', 'FF', 'EU', 'OS', 'open', 'YA', 'QJ', 'open', 'SV', 'HE', 'QE', 'open', 'LG', 'IV', 'OQ', 'open', 'KI', 'AO', 'GJ', 'open', 'UD', 'DV', 'open', 'JH', 'HU', 'KU', 'open'])
