@@ -203,7 +203,7 @@ class Point:
 
     def __mul__(self,scalar):
         newpt = self.__copy__()
-        newpt *= other
+        newpt *= scalar
         return newpt
 
     def __imul__(self,scalar):
@@ -467,6 +467,7 @@ if __name__ == '__main__':
     print('p and q are',p.dist(q),'apart')
     print('p + q = ',p+q)
     print('r - q = ',r-q)
+    print('3p - 2q =', p*3 - q*2)
     assert(r - q == Point(3,8))
     assert(p != q)
 
