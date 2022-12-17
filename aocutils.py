@@ -1,5 +1,5 @@
 #
-# Advent of Code 2020
+# Advent of Code 2022
 # Bryan Clair
 #
 # Utilities
@@ -61,79 +61,6 @@ def mul_inv(a, b):
     if x1 < 0: x1 += b0
     return x1
 
-class Point3d:
-    """
-    A 3d point class
-    """
-    def __init__(self, x=0, y=0, z=0):
-        """
-        Construct from another point, an (x,y,z) tuple,
-        or x y z passed as values.
-        """
-        if isinstance(x,Point3d):
-            self.x = x.x
-            self.y = x.y
-            self.z = x.z
-        elif isinstance(x,tuple) or isinstance(x,list):
-            self.x, self.y, self.z = x
-        else:
-            self.x, self.y, self.z = x,y,z
-
-    def __copy__(self):
-        return Point3d(self)
-
-    def __iter__(self):
-        yield self.x
-        yield self.y
-        yield self.z
-
-    def __abs__(self):
-        return sqrt(self.x ** 2 + self.y ** 2 + self.z ** 2)
-
-    def dist(self, other):
-        """Euclidean distance."""
-        return abs(self - other)
-    
-    def dist2(self,other):
-        """Euclidean distance, squared"""
-        return ((self.x-other.x) ** 2 + (self.y-other.y) ** 2 + (self.z-other.z) ** 2)
-
-    def mandist(self,other):
-        """Manhattan distance"""
-        return abs(self.x - other.x) + abs(self.y - other.y) + abs(self.z - other.z)
-    def __eq__(self,other):
-        return (self.x == other.x) and (self.y == other.y) and (self.z == other.z)
-
-    def __ne__(self,other):
-        return not self == other
-
-    def __add__(self,other):
-        newpt = self.__copy__()
-        newpt += other
-        return newpt
-
-    def __iadd__(self,other):
-        self.x += other.x
-        self.y += other.y
-        self.z += other.z
-        return self
-
-    def __sub__(self,other):
-        newpt = self.__copy__()
-        newpt -= other
-        return newpt
-
-    def __isub__(self,other):
-        self.x -= other.x
-        self.y -= other.y
-        self.z -= other.z
-        return self
-
-    def __hash__(self):
-        return hash((self.x,self.y,self.z))
-    
-    def __str__(self):
-        return '(%s,%s,%s)' % (str(self.x),str(self.y),str(self.z))
 
 class Point:
     """
@@ -159,25 +86,31 @@ class Point:
         yield self.x
         yield self.y
 
-    def __abs__(self):
-        return sqrt(self.x ** 2 + self.y ** 2)
-
-    def dist(self, other):
-        """Euclidean distance."""
-        return abs(self - other)
-
-    def mandist(self,other):
-        """Manhattan distance"""
-        return abs(self.x - other.x) + abs(self.y - other.y)
-    
-    def unit(self):
-        """Make return a unit vector, same direction."""
-        a = abs(self)
-        return Point(self.x/a,self.y/a)
-
     def __eq__(self,other):
         return (self.x == other.x) and (self.y == other.y)
 
+    def __iadd__(self,other):
+        self.x += other.x
+        self.y += other.y
+        return self
+
+    def __isub__(self,other):
+        self.x -= other.x
+        self.y -= other.y
+        return self
+
+    def __imul__(self,scalar):
+        self.x *= scalar
+        self.y *= scalar
+        return self
+
+    def __itruediv__(self,scalar):
+        self.x /= scalar
+        self.y /= scalar
+        return self
+    
+    # Everything below here is dimension agnostic and inherited to Point3d
+    
     def __ne__(self,other):
         return not self == other
 
@@ -186,36 +119,114 @@ class Point:
         newpt += other
         return newpt
 
-    def __iadd__(self,other):
-        self.x += other.x
-        self.y += other.y
-        return self
-
     def __sub__(self,other):
         newpt = self.__copy__()
         newpt -= other
         return newpt
 
-    def __isub__(self,other):
-        self.x -= other.x
-        self.y -= other.y
-        return self
-
     def __mul__(self,scalar):
+        """Scalar multiplication"""
         newpt = self.__copy__()
         newpt *= scalar
         return newpt
 
+    def __truediv__(self,scalar):
+        """Scalar division"""
+        newpt = self.__copy__()
+        newpt /= scalar
+        return newpt
+
+    def __abs__(self):
+        """Euclidean length"""
+        return sqrt(self.length2())
+
+    def length(self):
+        """Euclidean length"""
+        return abs(self)
+        
+    def length2(self):
+        """Euclidean length squared"""
+        return sum([c ** 2 for c in self])
+        
+    def dist(self, other):
+        """Euclidean distance."""
+        return abs(self - other)
+
+    def dist2(self,other):
+        """Euclidean distance, squared"""
+        return (self - other).length2()
+
+    def manabs(self):
+        """Manhattan metric (distance from 0)"""
+        return sum([abs(c) for c in self])
+    
+    def mandist(self,other):
+        """Manhattan distance"""
+        return (self - other).manabs()
+    
+    def unit(self):
+        """Make a new unit vector, same direction."""
+        a = abs(self)
+        return (self/a).__copy__()
+
+    def __hash__(self):
+        return hash(tuple(self))
+    
+    def __str__(self):
+        return str(tuple(self))
+
+class Point3d(Point):
+    """
+    A 3d point class
+    """
+    def __init__(self, x=0, y=0, z=0):
+        """
+        Construct from another point, an (x,y,z) tuple,
+        or x y z passed as values.
+        """
+        if isinstance(x,Point3d):
+            self.x = x.x
+            self.y = x.y
+            self.z = x.z
+        elif isinstance(x,tuple) or isinstance(x,list):
+            self.x, self.y, self.z = x
+        else:
+            self.x, self.y, self.z = x,y,z
+
+    def __copy__(self):
+        return Point3d(self)
+
+    def __iter__(self):
+        yield self.x
+        yield self.y
+        yield self.z
+
+    def __eq__(self,other):
+        return (self.x == other.x) and (self.y == other.y) and (self.z == other.z)
+
+    def __iadd__(self,other):
+        self.x += other.x
+        self.y += other.y
+        self.z += other.z
+        return self
+
+    def __isub__(self,other):
+        self.x -= other.x
+        self.y -= other.y
+        self.z -= other.z
+        return self
+
     def __imul__(self,scalar):
         self.x *= scalar
         self.y *= scalar
+        self.z *= scalar
         return self
 
-    def __hash__(self):
-        return hash((self.x,self.y))
-    
-    def __str__(self):
-        return '(%s,%s)' % (str(self.x),str(self.y))
+    def __itruediv__(self,scalar):
+        self.x /= scalar
+        self.y /= scalar
+        self.z /= scalar
+        return self
 
 class Grid:
     """
