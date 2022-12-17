@@ -201,6 +201,16 @@ class Point:
         self.y -= other.y
         return self
 
+    def __mul__(self,scalar):
+        newpt = self.__copy__()
+        newpt *= other
+        return newpt
+
+    def __imul__(self,scalar):
+        self.x *= scalar
+        self.y *= scalar
+        return self
+
     def __hash__(self):
         return hash((self.x,self.y))
     
