@@ -241,6 +241,9 @@ class Grid:
         x,y = p
         return (x,y) in self.raster
 
+    def pop(self,p):
+        return self.raster.pop(p)
+    
     def __iter__(self):
         return iter(self.raster)
 
