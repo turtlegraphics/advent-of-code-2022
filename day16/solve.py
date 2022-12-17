@@ -147,3 +147,6 @@ pressure_table = Store()
 best = pressure(time=START_TIME, pos=('AA','AA'), valves=0))
 
 print('part 2:',best)
+
+# Visits just under 190,000,000 states
+# Ran in under 15 minutes
