@@ -19,8 +19,6 @@ nbrs = {}
 flow = {}
 open_valves = set()
 
-OUTDEPTH = 27
-
 def pressure(start, timeleft, camefrom=None):
     # returns optimal pressure and the path to do it
     if timeleft == 0:
@@ -63,5 +61,7 @@ for line in inputlines:
     # print(vname, flows, nbrstr)
     nbrs[vname] = [x.strip() for x in nbrstr.split(',')]
     flow[vname] = int(flows)
+
+OUTDEPTH = 27
 
 print(pressure('AA',30))
