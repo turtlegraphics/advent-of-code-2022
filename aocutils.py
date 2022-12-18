@@ -61,6 +61,79 @@ def mul_inv(a, b):
     if x1 < 0: x1 += b0
     return x1
 
+class ZSubset:
+    """
+    Implements a (finite) subset of the integers as a union of ranges.
+    Probably better to use a dict if your subset has lots of isolated points,
+    but efficient if your subset consists of solid ranges.
+    See AOC 2022 Day 15 for a use case.
+    """
+    def __init__(self,x0=None,x1=None):
+        """
+        Create a new ZSubset which is either the empty set,
+        the point x0, or the set x0,...,x1
+        """
+        if x0 is None:
+            self.ranges = []
+        else:
+            if x1 is None:
+                self.ranges = [[x0,x0]]
+            else:
+                self.ranges = [[x0,x1]]
+
+    def union(self, other):
+        """
+        Alters self to become self U other.
+        Current implementation is inefficient:
+          O(n^2) where n is number of ranges.  Should be O(n).
+        """
+        for r in other.ranges:
+            self._addrange(r)
+
+    def _addrange(self,r):
+        """Add a signle range, keeping contiguous ranges"""
+        x0,x1 = r
+        
+        # find the rightmost range with x coordinate less than x0
+        try:
+            i = 0
+            while self.ranges[i][0] < x0:
+                i += 1
+        except IndexError:
+            pass
+        if (i == 0) or (x0 > self.ranges[i-1][1]+1):
+            self.ranges.insert(i,[x0,x1])
+        else:
+            i -= 1
+            # combine with range[i]
+            self.ranges[i][1] = max(self.ranges[i][1],x1)
+
+        # now see if the ith range needs to combine with i+1:
+        try:
+            while self.ranges[i][1] >= self.ranges[i+1][0]-1:
+                self.ranges[i][1] = max(self.ranges[i][1],self.ranges[i+1][1])
+                del self.ranges[i+1]
+        except IndexError:
+            pass
+
+    def display(self):
+        if not self.ranges:
+            print('<empty set>')
+            return
+
+        x = self.ranges[0][0]
+            
+    def __str__(self):
+        out = ''
+        for r in self.ranges:
+            if r[0]==r[1]:
+                # single point range
+                out += '['+str(r[0])+']'
+            else:
+                out += str(r)
+            out += ' '
+        return out.strip()
+
 
 class Point:
     """
@@ -464,6 +537,26 @@ if __name__ == '__main__':
     print('Solve x = 4 mod 16 and x = 2 mod 21:',)
     print(chinese_remainder([16,21],[4,2]))
 
+    # ZSubset
+    print('-'*20)
+    print("ZSubset")
+    print('-'*20)
+    empty = ZSubset()
+    A = ZSubset(0,10)
+    B = ZSubset(11)
+    C = ZSubset(15,20)
+    D = ZSubset(-4,19)
+    empty.display()
+    print('A=',A)
+    print('B=',B)
+    print('C=',C)
+    print('D=',D)
+    A.union(C)
+    A.union(B)
+    print('A U B U C =',A)
+    A.union(D)
+    print('A U B U C U D =',A)
+    
     # Point
     print('-'*20)
     print("Point class")
