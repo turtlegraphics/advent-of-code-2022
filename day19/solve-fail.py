@@ -7,28 +7,20 @@
 import sys
 import re
 import numpy as np
-import itertools
 
 sys.path.append("..")
 from aocutils import *
 
 args = parse_args()
 
-models = {
-    'ore':0,
-    'clay':1,
-    'obsidian':2,
-    'geode':3
-}
-
-
 def parse():
-    """
-    Parse input to produce blueprints, which are coded as cost matrices.
-    A cost matrix has, for example:
-       cost[models['clay'],models['obsidian']]
-    giving the cost in clay to build an obsidian robot.
-    """
+    indexes = {
+        'ore':0,
+        'clay':1,
+        'obsidian':2,
+        'geode':3
+    }
+
     bpparse = re.compile(r"Blueprint (\d+)") # or whatever
     costparse = re.compile(r"Each (\w+) robot costs (.*)$") # or whatever
     inputlines = [x.strip() for x in open(args.file).readlines()]
@@ -48,12 +40,13 @@ def parse():
                     for thing in prices:
                         p,s = thing.split()
                         s = s.strip()
-                        v[models[s]] = int(p)
+                        v[indexes[s]] = int(p)
                     costs.append(v)
             blueprints[id] = np.transpose(np.array(costs))
+                
     return blueprints
 
-def buildable(stuff, what = 3):
+def buildable(cost, stuff, what = 3):
     """Return a list of buildable vectors, given cost and stuff,
     only building robots of type what or larger."""
 
@@ -64,25 +57,13 @@ def buildable(stuff, what = 3):
     b = np.zeros(4)
     leftover = stuff
     while np.all(leftover >= 0):
-        for s in buildable(leftover, what - 1):
+        for s in buildable(cost, leftover, what - 1):
             result.append(s + b)
         b[what] += 1
         leftover = stuff - (cost @ b)
     return result
 
-def buildable2(stuff):
-    result = []
-    for b in itertools.product(range(10),range(10),range(3),range(3)):
-        left = stuff - (cost @ b)
-        if np.any(left < 0):
-            continue
-        if np.any(left >= build_limits):
-            # ensure you use materials
-            continue
-        result.append(b)
-    return result
-
-def geodes(time, robots, stuff):
+def geodes(cost, time, robots, stuff):
     """Find optimum geode production for given cost matrix, robots, stuff"""
     if time == 0:
         return stuff[3]
@@ -98,11 +79,11 @@ def geodes(time, robots, stuff):
     best = 0
     best_b = None
 
-    possible = buildable2(stuff)
+    possible = buildable(cost, stuff)
     if (time > display_time):
         print(indent+'buildable:',possible)
     for b in possible:
-        g = geodes(time-1, robots + b, stuff - (cost @ b) + robots)
+        g = geodes(cost, time-1, robots + b, stuff - (cost @ b) + robots)
         if g > best:
             best = g
             best_b = b
@@ -123,32 +104,19 @@ def geodes(time, robots, stuff):
 
 blueprints = parse()
 
-if False:
-    stuff0 = np.array([10,16,14,0])
-    print(stuff0)
-    print(buildable2(blueprints[1],stuff0))
-    quit()
+# print(buildable(blueprints[1],np.array([4,14,7,3])))
 
-display_time = 6
-time0 = 19
+display_time = 0
+time0 = 10
 
 numgeodes = {}
 for b in blueprints:
-    print('working on',b)
-
     best_geodes = 0
     seen = {}
     robot0 = np.array([1,0,0,0])
     stuff0 = np.zeros(4)
-    cost = blueprints[b]
-    build_limits = [4*cost[0,1],
-                    3*cost[1,2],
-                    cost[2,3],
-                    1000]
-    print('build limits:',build_limits)
-    
-    numgeodes[b] = geodes(time0, robot0, stuff0)
-    
+    print('working on',b)
+    numgeodes[b] = geodes(blueprints[b], time0, robot0, stuff0)
     print('finished with',b)
     print('id',b,'cracked',numgeodes[b],'geodes')
 
