@@ -31,7 +31,7 @@ def calc(who):
     if yell[1] == '-':
         return left - right
     if yell[1] == '/':
-        return left // right
+        return left / right
     if yell[1] == '*':
         return left * right
     
