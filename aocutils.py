@@ -7,6 +7,7 @@
 from argparse import ArgumentParser
 from math import sqrt
 from functools import reduce
+import copy
 
 def parse_args():
     parser = ArgumentParser()
@@ -308,9 +309,20 @@ class Grid:
     Keeps track of its own dimensions and displays the smallest rectangle that
     contains all data.
     """
-    def __init__(self):
-        self.raster = {}        
-
+    def __init__(self, orig = None):
+        if orig:
+            self.raster = copy.deepcopy(orig.raster)
+            self.xmin = orig.xmin
+            self.xmax = orig.xmax
+            self.ymin = orig.ymin
+            self.ymax = orig.ymax
+        else:
+            self.raster = {}
+            self.xmin = None
+            self.xmax = None
+            self.ymin = None
+            self.ymax = None
+        
     def __setitem__(self,p,tile):
         x,y = p
 
@@ -594,6 +606,7 @@ if __name__ == '__main__':
     print("Grid class")
     print('-'*20)
     g = Grid()
+    g.bounds()
     g[Point(-1,0)] = 'o'
     g[Point(1,0)] = 'o'
     dots = [(-1,2),(0,2),(1,2),(-2,1),(-2,0),(-2,-1),
