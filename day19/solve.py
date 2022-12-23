@@ -143,18 +143,23 @@ def geodes(time, robots, stuff):
         
     return best
 
+from timeit import default_timer as timer
+from datetime import timedelta
+
 def blueprint_optimize(b):
     """Calculate and return the optimum number of geodes for this blueprint."""
     print()
     print('=============')
     print('BLUEPRINT',b)
     print('=============')
-
+    
     global cost         # cost matrix
     global seen         # store of seen states
 
     global best_geodes  # only used to output progress
     
+    start_time = timer()
+
     best_geodes = 0
     seen = {}
     robot0 = np.array([1,0,0,0])
@@ -162,9 +167,12 @@ def blueprint_optimize(b):
     cost = blueprints[b]
     
     result = geodes(time0, robot0, stuff0)
+
+    end_time = timer()
     
-    print('finished with',b)
+    print('finished with blueprint',b)
     print('id',b,'cracked',result,'geodes')
+    print('compute time:',timedelta(seconds = round(end_time - start_time)))
     return result
 
 def do_blueprints(targets):
