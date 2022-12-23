@@ -52,7 +52,7 @@ def parse():
             blueprints[id] = np.transpose(np.array(costs))
     return blueprints
 
-def build(stuff):
+def build(stuff, robots):
     """Given stuff, determine a list of things to consdier building.
     - Always build geode cracker if possible (probably correct)
     - Always build obsidian robot if possible (questionably correct)
@@ -70,28 +70,36 @@ def build(stuff):
     # consider building an obsidian robot
     obs = np.array([0,0,1,0])
     if all((stuff - cost @ obs) >= 0):
-        result.append(obs)
+        # you can afford it, but do you already have enough?
+        if robots[2] < maxrobots[2]:
+            result.append(obs)
 
     # actually, always build obsidian if you can
     if result:
-        return result
+       return result
     
     # consider building a clay robot
     clay = np.array([0,1,0,0])
     if all((stuff - cost @ clay) >= 0):
-        result.append(clay)
+        # you can afford it, but do you already have enough?
+        if robots[1] < maxrobots[1]:
+            result.append(clay)
     
     # consider building an ore robot
     ore = np.array([1,0,0,0])
     if all((stuff - cost @ ore) >= 0):
-        result.append(ore)
+        # you can afford it, but do you already have enough?
+        if robots[0] < maxrobots[0]:
+            result.append(ore)
 
     # possibly build nothing
     # but don't build nothing if you have a lot of ore
-    if stuff[0] < 8:
-        result.append(np.zeros(4))
-        
-    return result
+    if result:
+        if stuff[0] < 12:
+            result.append(np.zeros(4))
+        return result
+    else:
+        return([np.zeros(4)])
 
 def debug(time, msg):
     """Debug message based on -d argument"""
@@ -120,7 +128,11 @@ def geodes(time, robots, stuff):
     best = 0
     best_b = None
 
-    possible = build(stuff)
+    if time > 1:
+        possible = build(stuff, robots)
+    else:
+        possible = [np.zeros(4)]  # don't bother building in last minute
+        
     debug(time, ' buildable: '+str(possible))
     
     for b in possible:
@@ -133,6 +145,7 @@ def geodes(time, robots, stuff):
     debug(time, ' best was build  '+str(best_b) + ' to get ' + str(best))
 
     seen[state] = (time,best)
+
     if len(seen) % 10000 == 0:
         print('!seen:',len(seen))
 
@@ -154,6 +167,7 @@ def blueprint_optimize(b):
     print('=============')
     
     global cost         # cost matrix
+    global maxrobots    # max robots we need of any type
     global seen         # store of seen states
 
     global best_geodes  # only used to output progress
@@ -165,6 +179,7 @@ def blueprint_optimize(b):
     robot0 = np.array([1,0,0,0])
     stuff0 = np.zeros(4)
     cost = blueprints[b]
+    maxrobots = np.amax(cost,axis=1)
     
     result = geodes(time0, robot0, stuff0)
 
@@ -207,11 +222,16 @@ def product(scores):
 
     
 blueprints = parse()
+part1 = None
 
 # part 1:
 time0 = 24
-print('part 1:',quality(do_blueprints(blueprints)))
+
+part1 = quality(do_blueprints(blueprints))
+print('part 1:',part1)
 
 # part 2:
 time0 = 32
-print('part 2:',product(do_blueprints([1,2,3])))
+part2 = product(do_blueprints([1,2,3]))
+print('part 1:',part1)  # print again so it's not lost in output stream
+print('part 2:',part2)
