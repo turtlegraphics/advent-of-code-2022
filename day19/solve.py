@@ -55,7 +55,6 @@ def parse():
 def build(stuff, robots):
     """Given stuff, determine a list of things to consdier building.
     - Always build geode cracker if possible (probably correct)
-    - Always build obsidian robot if possible (questionably correct)
     - Always build *something* if you have 8 or more stuff (questionably correct)
     """
     
