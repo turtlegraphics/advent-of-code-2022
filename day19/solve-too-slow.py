@@ -53,7 +53,7 @@ def parse():
             blueprints[id] = np.transpose(np.array(costs))
     return blueprints
 
-def build_all(stuff, what = 3):
+def buildable(stuff, what = 3):
     """Return a list of buildable vectors, given cost and stuff,
     only building robots of type what or larger."""
 
@@ -70,77 +70,26 @@ def build_all(stuff, what = 3):
         leftover = stuff - (cost @ b)
     return result
 
-def build_limited(stuff):
-    """Return a list of buildable vectors, given cost and stuff.
-    Has upper limits on how many to consider as well as lower limits
-    ensuring you use high-value items.
-    However, this is BUGGED and will say it can build nothing when there's
-    enough obsidian but not enough ore.
-    This requires a global build_limits variable, maybe like so:
-    """
-    try:
-        build_limited.limits
-    except AttributeError:
-        build_limited.limits = [3*max(cost[0]),
-                                2*cost[1,2],
-                                cost[2,3],
-                                1000]
-        print('build limits set to',build_limited.limits)
-        
+def buildable2(stuff):
     result = []
     for b in itertools.product(range(5),range(5),range(3),range(3)):
         left = stuff - (cost @ b)
         if np.any(left < 0):
             continue
-        if np.any(left >= build_limited.limits):
+        if np.any(left >= build_limits):
             # ensure you use materials
             continue
         result.append(b)
     return result
 
-def build_greedy(stuff):
-    result = []
-
-    b = np.array([0,0,0,1])
-    # build geode cracker if you can
-    if all((stuff - cost @ b) >= 0):
-        return [b]
-
-    b = np.array([0,0,1,0])
-    # build obsidian robot if you can
-    if all((stuff - cost @ b) >= 0):
-        return [b]
-
-    result = []
-    # consider building a clay robot
-    clay = np.array([0,1,0,0])
-    if all((stuff - cost @ clay) >= 0):
-        result.append(clay)
-    
-    # consider building an ore robot
-    ore = np.array([1,0,0,0])
-    if all((stuff - cost @ ore) >= 0):
-        result.append(ore)
-
-    # possibly build nothing
-    if stuff[0] < 8:
-        result.append(np.zeros(4))
-        
-    return result
-
-def debug(time, msg):
-    """Debug message based on -d argument"""
-    if (time > time0 - args.debug):
-        tstr = '%2d:' % (time0 - time)
-        indent = ' '*(time0-time)
-        print(tstr + indent + msg)
-
 def geodes(time, robots, stuff):
     """Find optimum geode production for given cost matrix, robots, stuff"""
-    debug(time, 'stuff: '+str(stuff)+' robots: '+str(robots))
-    
     if time == 0:
         return stuff[3]
+
+    if (time > display_time):
+        indent = ' '*(24-time)
+        print(indent+'time',time,'stuff',stuff,'robots',robots)
     
     state = (time,tuple(robots),tuple(stuff))
     if state in seen:
@@ -149,54 +98,59 @@ def geodes(time, robots, stuff):
     best = 0
     best_b = None
 
-    possible = BUILD_FUNCTION(stuff)
-    debug(time, ' buildable: '+str(possible))
-    
+    possible = buildable2(stuff)
+    if (time > display_time):
+        print(indent+'buildable:',possible)
     for b in possible:
-        debug(time,' try building '+str(b))
         g = geodes(time-1, robots + b, stuff - (cost @ b) + robots)
         if g > best:
             best = g
             best_b = b
 
-    debug(time, ' best was build  '+str(best_b) + ' to get ' + str(best))
-
+    if (time > display_time):
+        print(indent+':building',best_b,'to get',best)
+        
     seen[state] = best
     if len(seen) % 10000 == 0:
         print('!seen:',len(seen))
 
     global best_geodes
     if best > best_geodes:
-        print('!new best: '+str(best))
+        print('!new best:',best)
         best_geodes = best
         
     return best
 
-def test():
-    global cost
-    cost = blueprints[1]
-    stuff0 = np.array([1,0,7,0])  # this is a problem - it gives up instead of waiting
-    print(stuff0)
-    print(build_limited(stuff0))
-    quit()
-
 blueprints = parse()
 
-time0 = 24
+if False:
+    cost = blueprints[1]
+    build_limits = [3*max(cost[0]),
+                    2*cost[1,2],
+                    cost[2,3],
+                    1000]
+    stuff0 = np.array([1,0,7,0])  # this is a problem - it gives up instead of waiting
+    print(stuff0)
+    print(buildable2(stuff0))
+    quit()
+
+display_time = 6
+time0 = 19
+
 numgeodes = {}
-
-BUILD_FUNCTION = build_greedy
-
 for b in blueprints:
-    print('=============')
-    print('BLUEPRINT',b)
-    print('=============')
+    print('working on',b)
 
     best_geodes = 0
     seen = {}
     robot0 = np.array([1,0,0,0])
     stuff0 = np.zeros(4)
     cost = blueprints[b]
+    build_limits = [3*max(cost[0]),
+                    2*cost[1,2],
+                    cost[2,3],
+                    1000]
+    print('build limits:',build_limits)
     
     numgeodes[b] = geodes(time0, robot0, stuff0)
     

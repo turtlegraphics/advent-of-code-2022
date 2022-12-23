@@ -1,0 +1,36 @@
+results
+id 1 cracked 2.0 geodes
+id 2 cracked 0 geodes
+id 3 cracked 0 geodes
+id 4 cracked 0 geodes
+id 5 cracked 10.0 geodes
+id 6 cracked 4.0 geodes
+id 7 cracked 6.0 geodes
+id 8 cracked 0 geodes
+id 9 cracked 0 geodes
+id 10 cracked 3.0 geodes
+id 11 cracked 0 geodes
+id 12 cracked 0 geodes
+id 13 cracked 8.0 geodes
+id 14 cracked 7.0 geodes
+id 15 cracked 1.0 geodes
+id 16 cracked 2.0 geodes
+id 17 cracked 1.0 geodes
+id 18 cracked 1.0 geodes
+id 19 cracked 1.0 geodes
+id 20 cracked 2.0 geodes
+id 21 cracked 2.0 geodes
+id 22 cracked 2.0 geodes
+id 23 cracked 5.0 geodes
+id 24 cracked 0 geodes
+id 25 cracked 0 geodes
+id 26 cracked 0 geodes
+id 27 cracked 2.0 geodes
+id 28 cracked 6.0 geodes
+id 29 cracked 1.0 geodes
+id 30 cracked 0 geodes
+part 1: 943.0
+(too low)
+Guessed 973 - too high
+Guessed 958 - too low
+Guessed 965 - doesn't say, timed out after 4 wrong guesses
