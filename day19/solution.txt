@@ -31,6 +31,26 @@ id 29 cracked 1.0 geodes
 id 30 cracked 0 geodes
 part 1: 943.0
 (too low)
+
+Now I'm guessing answers
+
 Guessed 973 - too high
+Guessed 969 - nope
+Guessed 965 - nope
+Guessed 962 - nope
+Guessed 960 - YES!!!!
+Guessed 959 - nope
 Guessed 958 - too low
-Guessed 965 - doesn't say, timed out after 4 wrong guesses
+
+part 2:
+
+python3 solve.py -d13  782.65s user 3.79s system 76% cpu 17:04.52 total
+id 1 cracked 30.0 geodes
+
+python3 solve.py -d13  626.96s user 2.10s system 100% cpu 10:28.75 total
+id 2 cracked 4.0 geodes
+
+python3 solve.py -d13  882.00s user 3.22s system 99% cpu 14:45.45 total
+id 3 cracked 17.0 geodes
+
+30 * 4 * 17 = 2040

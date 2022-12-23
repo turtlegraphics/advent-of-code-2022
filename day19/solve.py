@@ -106,12 +106,16 @@ def build_greedy(stuff):
     if all((stuff - cost @ b) >= 0):
         return [b]
 
-    b = np.array([0,0,1,0])
-    # build obsidian robot if you can
-    if all((stuff - cost @ b) >= 0):
-        return [b]
-
     result = []
+    # consider building an obsidian robot
+    obs = np.array([0,0,1,0])
+    if all((stuff - cost @ obs) >= 0):
+        result.append(obs)
+
+    # actually, always build obsidian if you can
+    if result:
+        return result
+    
     # consider building a clay robot
     clay = np.array([0,1,0,0])
     if all((stuff - cost @ clay) >= 0):
@@ -123,6 +127,7 @@ def build_greedy(stuff):
         result.append(ore)
 
     # possibly build nothing
+    # but don't build nothing if you have a lot of ore
     if stuff[0] < 8:
         result.append(np.zeros(4))
         
@@ -180,35 +185,54 @@ def test():
     print(build_limited(stuff0))
     quit()
 
-blueprints = parse()
-
-time0 = 24
-numgeodes = {}
-
-BUILD_FUNCTION = build_greedy
-
-for b in blueprints:
+def blueprint_optimize(b):
+    print()
     print('=============')
     print('BLUEPRINT',b)
     print('=============')
 
+    global cost
+    global best_geodes
+    global seen
+    
     best_geodes = 0
     seen = {}
     robot0 = np.array([1,0,0,0])
     stuff0 = np.zeros(4)
     cost = blueprints[b]
     
-    numgeodes[b] = geodes(time0, robot0, stuff0)
+    result = geodes(time0, robot0, stuff0)
     
     print('finished with',b)
-    print('id',b,'cracked',numgeodes[b],'geodes')
+    print('id',b,'cracked',result,'geodes')
+    return result
 
-print('='*30)
-print('results')
+def do_all_blueprints():
+    numgeodes = {}
 
-quality = 0
-for b in numgeodes:
-    print('id',b,'cracked',numgeodes[b],'geodes')
-    quality += b*numgeodes[b]
+    for b in blueprints:
+        numgeodes[b] = blueprint_optimize(b)
 
-print('part 1:',quality)
+    print('='*30)
+    print('results')
+
+    quality = 0
+    for b in numgeodes:
+        print('id',b,'cracked',numgeodes[b],'geodes')
+        quality += b*numgeodes[b]
+
+    return quality
+
+blueprints = parse()
+time0 = 24
+BUILD_FUNCTION = build_greedy
+
+# part 1:
+print('part 1:',do_all_blueprints())
+
+# part 2:
+time0 = 32
+b1 = blueprint_optimize(1)
+b2 = blueprint_optimize(2)
+b3 = blueprint_optimize(3)
+print('part 2:',b1*b2*b3)
