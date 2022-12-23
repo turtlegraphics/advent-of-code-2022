@@ -22,6 +22,13 @@ def parse_args():
                         dest = "verbose",
                         help = "Suppress output.")
     
+    parser.add_argument("-d", "--debug",
+                        action="store",
+                        dest = "debug",
+                        default = 0,
+                        type = int,
+                        help = "Debug level, default 0.")
+    
     parser.add_argument("-p", "--part",
                         action="store",
                         dest = "part",
