@@ -5,10 +5,10 @@ id 3 cracked 0 geodes
 id 4 cracked 0 geodes
 id 5 cracked 10.0 geodes
 id 6 cracked 4.0 geodes
-id 7 cracked 6.0 geodes
+id 7 cracked 6.0 geodes **
 id 8 cracked 0 geodes
 id 9 cracked 0 geodes
-id 10 cracked 3.0 geodes
+id 10 cracked 3.0 geodes **
 id 11 cracked 0 geodes
 id 12 cracked 0 geodes
 id 13 cracked 8.0 geodes
@@ -54,3 +54,7 @@ python3 solve.py -d13  882.00s user 3.22s system 99% cpu 14:45.45 total
 id 3 cracked 17.0 geodes
 
 30 * 4 * 17 = 2040
+
+** Original was incorrect on:
+blueprint 7  - can crack 7
+blueprint 10 - can crack 4

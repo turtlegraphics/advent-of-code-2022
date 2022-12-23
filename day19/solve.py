@@ -66,7 +66,6 @@ def build(stuff, robots):
     if all((stuff - cost @ b) >= 0):
         return [b]
 
-    result = []
     # consider building an obsidian robot
     obs = np.array([0,0,1,0])
     if all((stuff - cost @ obs) >= 0):
@@ -74,10 +73,6 @@ def build(stuff, robots):
         if robots[2] < maxrobots[2]:
             result.append(obs)
 
-    # actually, always build obsidian if you can
-    if result:
-       return result
-    
     # consider building a clay robot
     clay = np.array([0,1,0,0])
     if all((stuff - cost @ clay) >= 0):
@@ -92,14 +87,16 @@ def build(stuff, robots):
         if robots[0] < maxrobots[0]:
             result.append(ore)
 
-    # possibly build nothing
-    # but don't build nothing if you have a lot of ore
+
+    # build nothing?
+    #result.append(np.zeros(4))  # always
     if result:
-        if stuff[0] < 12:
-            result.append(np.zeros(4))
-        return result
+        if stuff[0] < 8:
+            result.append(np.zeros(4))  # only if lots of ore
     else:
-        return([np.zeros(4)])
+        result = [np.zeros(4)]          # or no other option
+
+    return result
 
 def debug(time, msg):
     """Debug message based on -d argument"""
@@ -186,7 +183,7 @@ def blueprint_optimize(b):
     end_time = timer()
     
     print('finished with blueprint',b)
-    print('id',b,'cracked',result,'geodes')
+    print('blueprint',b,'cracked',result,'geodes')
     print('compute time:',timedelta(seconds = round(end_time - start_time)))
     return result
 
@@ -202,7 +199,7 @@ def do_blueprints(targets):
     print('='*30)
     print('RESULTS')
     for b,score in scores.items():
-        print('id',b,'cracked',score,'geodes')
+        print('blueprint',b,'cracked',score,'geodes')
         
     return scores
 
