@@ -395,6 +395,14 @@ class Grid:
         """Return bounds of the grid in format (xmin, ymin, xmax, ymax)"""
         return (self.xmin,self.ymin,self.xmax,self.ymax)
 
+    def width(self):
+        """Return the max width of the grid."""
+        return self.xmax - self.xmin + 1
+    
+    def height(self):
+        """Return the max height of the grid."""
+        return self.ymax - self.ymin + 1
+    
     def scan(self,map,vflip=True):
         """
         Take a list of strings or lists (map) and scan into the grid.
