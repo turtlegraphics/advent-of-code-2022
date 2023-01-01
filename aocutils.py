@@ -221,6 +221,9 @@ class Point:
         """Euclidean length"""
         return sqrt(self.length2())
 
+    def dot(self, other):
+        return sum([a*b for (a,b) in zip(self,other)])
+    
     def length(self):
         """Euclidean length"""
         return abs(self)
@@ -631,6 +634,7 @@ if __name__ == '__main__':
     print('p and q are',p.dist(q),'apart')
     print('p + q = ',p+q)
     print('r - q = ',r-q)
+    print('p . q = ',p.dot(q))
     assert(r - q == Point3d(1,-5,-2))
     assert(p != q)
     
