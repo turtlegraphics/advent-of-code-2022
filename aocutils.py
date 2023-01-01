@@ -419,19 +419,38 @@ class Grid:
 
     def dijkstra(self, source, target = None,
                  distance_function = lambda u,v : 1):
+        """
+        Perform Dijkstra's algorithm to find the distance of all Grid points
+        from the source.
+
+        Returns a pair (dist, prev) of dictionaries which give the distance
+        from source for each point, and the prev point in the distance digraph.
+        So you can follow the prev links back to the source.
+
+        * If the grid is disconnected, it stops when the connected component
+        is fully mapped out.  In other words, dist[p] exists if and only if
+        p is in the connected component of source.
+
+        * Stops if target is reached and just return a partial result, in
+        particular dist[target] will be the distance from source to target,
+        and you can follow the prev[] path backwards.
+
+        * distance_function can weight edges in the graph, by returning
+        the weight/distance from u to v.
+        """
+
         sx,sy = source
-        assert((sx,sy) in self)
+        source = (sx,sy)
+
+        assert(source in self)
         
         dist = {}
         prev = {}
         Q = set()
-
-        for v in self:
-            dist[v] = float("inf")
-            prev[v] = None
-            Q.add(v)
-
-        dist[(sx,sy)] = 0
+        Q.add(source)
+        dist[source] = 0
+        prev[source] = None
+        visited = set()
         
         while Q:
             # find min distance point u
@@ -445,16 +464,23 @@ class Grid:
                 return (dist, prev)
             
             Q.remove(u)
-
+            visited.add(u)
+            
             # update u's neighbors
             nbrs = self.neighbors(u)
             for v in nbrs:
                 v = (v.x,v.y)
+                if v in visited:
+                    continue
+                dv = dist[u] + distance_function(u,v) 
                 if v in Q:
-                    alt = dist[u] + distance_function(u,v) 
-                    if alt < dist[v]:
-                        dist[v] = alt
+                    if dv < dist[v]:
+                        dist[v] = dv
                         prev[v] = u
+                else:
+                    Q.add(v)
+                    dist[v] = dv
+                    prev[v] = u
 
         return (dist, prev)
 
