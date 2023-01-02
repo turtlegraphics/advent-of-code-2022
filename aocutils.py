@@ -14,6 +14,8 @@ import math
 import functools
 import copy
 
+_verbosity_level = 0
+
 def parse_args():
     """
     Function to parse arguments for an AOC solution.
@@ -25,7 +27,7 @@ def parse_args():
     parser.add_argument("-v", "--verbose",
                         action = "count",
                         dest = "verbose",
-                        default = 1,
+                        default = 0,
                         help = "Set verbosity level (-v, -vv, -vvv,...)")
     
     parser.add_argument("-q", "--quiet",
@@ -53,10 +55,16 @@ def parse_args():
                         default = "input.txt",
                         help = "Problem input file (optional).")
     args = parser.parse_args()
-    if args.verbose > 2:
-        print(args)
+
+    global _verbosity_level
+    _verbosity_level = args.verbose
 
     return args
+
+def debug(*args,**kwargs):
+    """Hacky debug print function."""
+    if _verbosity_level > 0:
+        print(*args,**kwargs)
 
 # CRT from https://rosettacode.org/wiki/Chinese_remainder_theorem#Python      
 def chinese_remainder(n, a):
@@ -622,9 +630,14 @@ if __name__ == '__main__':
     print('-'*20)
     print('Argument parsing')
     print('-'*20)
-    print(parse_args())
+    args = parse_args()
+    print(args)
+    if args.verbose == 0:
+        print('Verbose level 0, use -v,-vv,... to change')
+    else:
+        debug('Verbose level',args.verbose)
     print()
-
+        
     # Progress bar
     print('-'*20)
     print("Progress bar")
