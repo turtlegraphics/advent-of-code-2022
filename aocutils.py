@@ -312,6 +312,32 @@ class Point3d(Point):
         self.z /= scalar
         return self
 
+class Turtle(Point):
+    """A point that can move like a turtle."""
+    def __init__(self,heading='N',*args):
+        Point.__init__(self,*args)
+        self.face(heading)
+        
+    def forward(self,dist):
+        self += self.heading*dist
+
+    def back(self,dist):
+        self -= self.heading*dist
+
+    def face(self,heading):
+        self.heading = self._compass[heading]
+
+    def left(self):
+        """Turn left 90."""
+        self.heading = Point(-self.heading.y, self.heading.x)
+        
+    def right(self):
+        """Turn right 90."""
+        self.heading = Point(self.heading.y, -self.heading.x)
+        
+    _compass = {'N':Point(0,1), 'W':Point(-1,0), 'S':Point(0,-1), 'E':Point(0,1)}
+
+    
 class Grid:
     """
     A 2d grid of tile objects (probably characters) that can be any size.
@@ -645,7 +671,31 @@ if __name__ == '__main__':
     print('p . q = ',p.dot(q))
     assert(r - q == Point3d(1,-5,-2))
     assert(p != q)
-    
+
+    # Turtle
+    print('-'*20)
+    print("Point3d class")
+    print('-'*20)
+    g = Grid()
+    g.scan(['....']*4)
+    t = Turtle()
+    g[t] = '1'
+    t.forward(1)
+    g[t] = '2'
+    t.right()
+    t.forward(3)
+    g[t] = '3'
+    t.left()
+    t.forward(1)
+    g[t] = '4'
+    t.left()
+    t.forward(2)
+    g[t] = '5'
+    t.right()
+    t.forward(1)
+    g[t] = '6'
+    g.display()
+
     # Grid
     print('-'*20)
     print("Grid class")
