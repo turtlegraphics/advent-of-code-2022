@@ -314,9 +314,9 @@ class Point3d(Point):
 
 class Turtle(Point):
     """A point that can move like a turtle."""
-    def __init__(self,heading='N',*args):
-        Point.__init__(self,*args)
-        self.face(heading)
+    def __init__(self,*args, **kwargs):
+        Point.__init__(self,*args, **kwargs)
+        self.heading = None
         
     def forward(self,dist):
         self += self.heading*dist
