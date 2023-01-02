@@ -2,20 +2,32 @@
 # Advent of Code 2022
 # Bryan Clair
 #
-# Utilities
-#
-from argparse import ArgumentParser
-from math import sqrt
-from functools import reduce
+# Utilities, including:
+#   Point and Grid classes and various derivations
+#   Number theoretic functions
+#   Progress bar (just tqdm, actually)
+
+from tqdm import tqdm  # progress bar
+
+import argparse
+import math
+import functools
 import copy
 
 def parse_args():
-    parser = ArgumentParser()
+    """
+    Function to parse arguments for an AOC solution.
+    Sets input file to input.txt unless otherwise specified.
+    Handles part, debug, quiet, verbose flags.
+    """
+    
+    parser = argparse.ArgumentParser()
     parser.add_argument("-v", "--verbose",
                         action = "count",
                         dest = "verbose",
                         default = 1,
                         help = "Set verbosity level (-v, -vv, -vvv,...)")
+    
     parser.add_argument("-q", "--quiet",
                         action = "store_const",
                         const = 0,
@@ -50,7 +62,7 @@ def parse_args():
 def chinese_remainder(n, a):
     """solves the chinese remainder theorem for x == a (mod n)"""
     sum = 0
-    prod = reduce(lambda a, b: a*b, n)
+    prod = functools.reduce(lambda a, b: a*b, n)
 
     for n_i, a_i in zip(n, a):
         p = prod // n_i
@@ -219,7 +231,7 @@ class Point:
 
     def __abs__(self):
         """Euclidean length"""
-        return sqrt(self.length2())
+        return math.sqrt(self.length2())
 
     def dot(self, other):
         return sum([a*b for (a,b) in zip(self,other)])
@@ -607,8 +619,19 @@ class HexPoint(Point):
 
 if __name__ == '__main__':
     # Argument parsing
-    print('Result of argument parsing')
+    print('-'*20)
+    print('Argument parsing')
+    print('-'*20)
     print(parse_args())
+    print()
+
+    # Progress bar
+    print('-'*20)
+    print("Progress bar")
+    print('-'*20)
+    from time import sleep
+    for i in tqdm(range(75)):
+        sleep(0.01)
     print()
     
     # Number Theory
@@ -679,6 +702,7 @@ if __name__ == '__main__':
     g = Grid()
     g.scan(['....']*4)
     t = Turtle()
+    t.face('N')
     g[t] = '1'
     t.forward(1)
     g[t] = '2'
